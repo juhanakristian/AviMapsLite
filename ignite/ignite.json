@@ -1,6 +1,10 @@
 {
   "navigation": "react-navigation",
-  "generators": {},
+  "generators": {
+    "map": "ignite-maps",
+    "map-utilities": "ignite-maps",
+    "map-callout": "ignite-maps"
+  },
   "createdWith": "3.5.3",
   "boilerplate": "ignite-bowser",
   "boilerplateVersion": "5.3.0"

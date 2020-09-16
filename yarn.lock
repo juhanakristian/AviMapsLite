@@ -6544,6 +6544,11 @@ ignite-bowser@^5.3.0:
     ramda "^0.26.1"
     read-pkg-up "^7.0.0"
 
+ignite-maps@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ignite-maps/-/ignite-maps-1.0.1.tgz#716d08b449262481a6069e4aa32bda91bc1c7cb5"
+  integrity sha512-ggURr0W1IyoePgLqZoOrO/lbUjUgR3r+MQs+ojAbUxsmfCQTuLLcNA03rTtj8L+Lp12Rty17XV5CUeZdfu24sg==
+
 ignore@^3.3.5:
   version "3.3.10"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.3.10.tgz#0a97fb876986e8081c631160f8f9f389157f0043"
@@ -10318,6 +10323,11 @@ react-native-localize@^1.0.0:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-1.4.1.tgz#031bd2089f09cc16ee7daee03019684dda60c275"
   integrity sha512-g1L1au6GtCd0Ci6lQ8JVPYgl7uvEtKY2jeVghJcV6qQEN9+qACyqjOIR8pskUyI+qcSj1z4/nZh3IFxDVu1drw==
+
+react-native-maps@0.16.4:
+  version "0.16.4"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.16.4.tgz#c18c3cab8cd0ce05431cd74dac11a39afaa579e4"
+  integrity sha512-dG7ISqQoy8RyshrFkHiAnmhf5CcoaenPLLB4s+GJgabcS3FTD72EWFhmIHewd+ItSFLzXQXbhW40aUpAMCFhfg==
 
 react-native-safe-area-context@0.7.3:
   version "0.7.3"
