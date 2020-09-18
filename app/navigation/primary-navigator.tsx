@@ -38,8 +38,6 @@ export function PrimaryNavigator() {
         gestureEnabled: true,
       }}
     >
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
       <Stack.Screen name="map" component={AviationMapScreen} />
     </Stack.Navigator>
   )

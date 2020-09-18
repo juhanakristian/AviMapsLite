@@ -13,6 +13,12 @@ const ROOT: ViewStyle = {
   flex: 1,
 }
 
+const CONTAINER: ViewStyle = {
+  backgroundColor: color.transparent,
+  paddingHorizontal: spacing[4],
+  flex: 1,
+}
+
 const MAP: ViewStyle = {
   width: "100%",
   height: "100%",
@@ -43,24 +49,26 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
   // Pull in navigation via hook
   // const navigation = useNavigation()
   return (
-    <Screen style={ROOT} preset="scroll">
+    <View style={ROOT}>
       <Wallpaper />
-      <Header
-        headerTx="demoScreen.howTo"
-        leftIcon="back"
-        onLeftPress={goBack}
-        style={HEADER}
-        titleStyle={HEADER_TITLE}
-      />
-      <MapView
-        style={MAP}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      />
-    </Screen>
+      <Screen style={CONTAINER} preset="scroll" backgroundColor="transparent">
+        <Header
+          headerTx="mapScreen.title"
+          leftIcon="bullet"
+          onLeftPress={goBack}
+          style={HEADER}
+          titleStyle={HEADER_TITLE}
+        />
+        <MapView
+          style={MAP}
+          initialRegion={{
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      </Screen>
+    </View>
   )
 })
