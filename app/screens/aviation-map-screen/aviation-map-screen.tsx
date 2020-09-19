@@ -1,8 +1,8 @@
 import React from "react"
 import { observer } from "mobx-react-lite"
-import { Image, ImageStyle, Platform, TextStyle, View, ViewStyle } from "react-native"
+import { TextStyle, View, ViewStyle } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import MapView from "react-native-maps"
+import MapView, { LocalTile } from "react-native-maps"
 import { color, spacing } from "../../theme"
 import { Screen, Header, Text, Wallpaper } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
@@ -54,20 +54,22 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
       <Screen style={CONTAINER} preset="scroll" backgroundColor="transparent">
         <Header
           headerTx="mapScreen.title"
-          leftIcon="bullet"
+          leftIcon="back"
           onLeftPress={goBack}
           style={HEADER}
           titleStyle={HEADER_TITLE}
         />
         <MapView
           style={MAP}
-          initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
+          region={{
+            latitude: 64.0797048,
+            longitude: 24.5472132,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-        />
+        >
+          <LocalTile pathTemplate="openflightmaps/{z}/{x}/{y}.png" tileSize={256} />
+        </MapView>
       </Screen>
     </View>
   )

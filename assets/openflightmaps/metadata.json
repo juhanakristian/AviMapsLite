@@ -1,0 +1,9 @@
+{
+    "attribution": "open fightmaps association / www.openflightmaps.org", 
+    "name": "TILESET EF", 
+    "format": "png", 
+    "bounds": "18,58,5, 32, 70,5", 
+    "version": "2007", 
+    "type": "baselayer", 
+    "description": "Finland"
+}
