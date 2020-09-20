@@ -1,6 +1,6 @@
 import React from "react"
 import { observer } from "mobx-react-lite"
-import { TextStyle, View, ViewStyle } from "react-native"
+import { TextStyle, View, ViewStyle, Image } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import MapView, { LocalTile } from "react-native-maps"
 import { color, spacing } from "../../theme"
@@ -68,7 +68,7 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
             longitudeDelta: 0.0421,
           }}
         >
-          <LocalTile pathTemplate="openflightmaps/{z}/{x}/{y}.png" tileSize={256} />
+          <LocalTile pathTemplate="./openflightmaps/{z}/{x}/{y}.png" tileSize={256} />
         </MapView>
       </Screen>
     </View>
