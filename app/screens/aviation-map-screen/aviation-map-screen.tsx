@@ -8,6 +8,8 @@ import { Screen, Header, Text, Wallpaper } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
 
+import { DocumentDirectoryPath } from "react-native-fs"
+
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.black,
   flex: 1,
@@ -41,6 +43,10 @@ const HEADER_TITLE: TextStyle = {
 export const AviationMapScreen = observer(function AviationMapScreen() {
   const navigation = useNavigation()
   const goBack = () => navigation.goBack()
+
+  React.useEffect(() => {
+    console.log(DocumentDirectoryPath)
+  }, [])
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   // OR
@@ -61,14 +67,19 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
         />
         <MapView
           style={MAP}
+          minZoomLevel={2}
+          maxZoomLevel={9}
           region={{
             latitude: 64.0797048,
             longitude: 24.5472132,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitudeDelta: 0.5,
+            longitudeDelta: 0.5,
           }}
         >
-          <LocalTile pathTemplate="./openflightmaps/{z}/{x}/{y}.png" tileSize={256} />
+          <LocalTile
+            pathTemplate={`${DocumentDirectoryPath}/openflightmaps/{z}/{x}/{y}.png`}
+            tileSize={256}
+          />
         </MapView>
       </Screen>
     </View>
