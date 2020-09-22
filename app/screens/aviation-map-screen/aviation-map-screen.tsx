@@ -1,12 +1,14 @@
 import React from "react"
+import Geolocation from "@react-native-community/geolocation"
+
 import { observer } from "mobx-react-lite"
 import { TextStyle, View, ViewStyle, Image } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import MapView, { LocalTile } from "react-native-maps"
+import MapView, { Coordinate, LatLng, LocalTile, Marker } from "react-native-maps"
 import { color, spacing } from "../../theme"
-import { Screen, Header, Text, Wallpaper } from "../../components"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../../models"
+import { Screen, Header, Wallpaper } from "../../components"
+
+import Airplane from "./airplane"
 
 import { DocumentDirectoryPath } from "react-native-fs"
 
@@ -17,7 +19,6 @@ const ROOT: ViewStyle = {
 
 const CONTAINER: ViewStyle = {
   backgroundColor: color.transparent,
-  paddingHorizontal: spacing[4],
   flex: 1,
 }
 
@@ -44,16 +45,26 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
   const navigation = useNavigation()
   const goBack = () => navigation.goBack()
 
-  React.useEffect(() => {
-    console.log(DocumentDirectoryPath)
-  }, [])
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
-  // OR
-  // const rootStore = useStores()
+  const [currentPosition, setCurrentPosition] = React.useState<LatLng>({
+    latitude: 64.0797048,
+    longitude: 24.5472132,
+  })
 
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
+  const [currentHeading, setCurrentHeading] = React.useState<number>(0)
+
+  React.useEffect(() => {
+    const watchId = Geolocation.watchPosition((position) => {
+      setCurrentPosition({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      })
+
+      setCurrentHeading(position.coords.heading)
+    })
+
+    return () => Geolocation.clearWatch(watchId)
+  }, [])
+
   return (
     <View style={ROOT}>
       <Wallpaper />
@@ -67,8 +78,7 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
         />
         <MapView
           style={MAP}
-          minZoomLevel={2}
-          maxZoomLevel={9}
+          onRegionChange={(region) => console.log(region)}
           region={{
             latitude: 64.0797048,
             longitude: 24.5472132,
@@ -80,6 +90,11 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
             pathTemplate={`${DocumentDirectoryPath}/openflightmaps/{z}/{x}/{y}.png`}
             tileSize={256}
           />
+          <Marker coordinate={currentPosition} rotation={currentHeading}>
+            <View>
+              <Airplane fill="black" />
+            </View>
+          </Marker>
         </MapView>
       </Screen>
     </View>
