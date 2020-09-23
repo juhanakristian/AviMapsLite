@@ -4,7 +4,7 @@ import Geolocation from "@react-native-community/geolocation"
 import { observer } from "mobx-react-lite"
 import { TextStyle, View, ViewStyle, Image } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import MapView, { Coordinate, LatLng, LocalTile, Marker } from "react-native-maps"
+import MapView, { Camera, Coordinate, LatLng, LocalTile, Marker } from "react-native-maps"
 import { color, spacing } from "../../theme"
 import { Screen, Header, Wallpaper } from "../../components"
 
@@ -59,11 +59,22 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
         longitude: position.coords.longitude,
       })
 
+      console.log(`Heading ${position.coords.heading}`)
       setCurrentHeading(position.coords.heading)
     })
 
     return () => Geolocation.clearWatch(watchId)
   }, [])
+
+  const camera: Camera = {
+    center: {
+      ...currentPosition,
+    },
+    pitch: 0,
+    heading: 0,
+    altitude: 10000,
+    zoom: 15,
+  }
 
   return (
     <View style={ROOT}>
@@ -78,20 +89,17 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
         />
         <MapView
           style={MAP}
-          onRegionChange={(region) => console.log(region)}
-          region={{
-            latitude: 64.0797048,
-            longitude: 24.5472132,
+          camera={camera}
+          rotateEnabled={false}
+          initialRegion={{
+            latitude: currentPosition.latitude,
+            longitude: currentPosition.longitude,
             latitudeDelta: 0.5,
             longitudeDelta: 0.5,
           }}
         >
-          <LocalTile
-            pathTemplate={`${DocumentDirectoryPath}/openflightmaps/{z}/{x}/{y}.png`}
-            tileSize={256}
-          />
-          <Marker coordinate={currentPosition} rotation={currentHeading}>
-            <View>
+          <Marker coordinate={currentPosition} flat={false} rotation={currentHeading}>
+            <View style={{ transform: [{ rotate: `${currentHeading}deg` }] }}>
               <Airplane fill="black" />
             </View>
           </Marker>
