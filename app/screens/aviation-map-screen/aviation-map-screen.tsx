@@ -2,7 +2,7 @@ import React from "react"
 import Geolocation from "@react-native-community/geolocation"
 
 import { observer } from "mobx-react-lite"
-import { TextStyle, View, ViewStyle, Image } from "react-native"
+import { TextStyle, View, ViewStyle, Image, Animated } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import MapView, { Camera, Coordinate, LatLng, LocalTile, Marker } from "react-native-maps"
 import { color, spacing } from "../../theme"
@@ -50,7 +50,11 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
     longitude: 24.5472132,
   })
 
+  const mapRef = React.useRef()
   const [currentHeading, setCurrentHeading] = React.useState<number>(0)
+  const [cameraHeading, setCameraHeading] = React.useState<number>(0)
+
+  const [_, forceUpdate] = React.useReducer((x) => x + 1, 0)
 
   React.useEffect(() => {
     const watchId = Geolocation.watchPosition((position) => {
@@ -66,15 +70,12 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
     return () => Geolocation.clearWatch(watchId)
   }, [])
 
-  const camera: Camera = {
-    center: {
-      ...currentPosition,
-    },
-    pitch: 0,
-    heading: 0,
-    altitude: 10000,
-    zoom: 15,
-  }
+  console.log(`User heading ${currentHeading} camera heading ${cameraHeading}`)
+  console.log(`${currentHeading + cameraHeading}`)
+
+  const markerHeading = cameraHeading + currentHeading
+  const adjustedMarkerHeading = markerHeading > 360 ? markerHeading - 360 : markerHeading
+  console.log(adjustedMarkerHeading)
 
   return (
     <View style={ROOT}>
@@ -89,17 +90,24 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
         />
         <MapView
           style={MAP}
-          camera={camera}
-          rotateEnabled={false}
+          // camera={camera}
           initialRegion={{
             latitude: currentPosition.latitude,
             longitude: currentPosition.longitude,
             latitudeDelta: 0.5,
             longitudeDelta: 0.5,
           }}
+          ref={mapRef}
+          onRegionChange={async () => {
+            // @ts-ignore: Object is possibly 'null'.
+            mapRef.current.getCamera().then((info) => {
+              setCameraHeading(info.heading)
+            })
+          }}
         >
-          <Marker coordinate={currentPosition} flat={false} rotation={currentHeading}>
-            <View style={{ transform: [{ rotate: `${currentHeading}deg` }] }}>
+          <Marker coordinate={currentPosition} flat={true} rotation={currentHeading}>
+            {/* <Animated.Image source="https://maxcdn.icons8.com/Share/icon/Transport/airplane_takeoff1600.png"></Animated.Image> */}
+            <View style={{ transform: [{ rotate: `${adjustedMarkerHeading}deg` }] }}>
               <Airplane fill="black" />
             </View>
           </Marker>
