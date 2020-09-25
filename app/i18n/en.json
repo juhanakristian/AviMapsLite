@@ -21,7 +21,8 @@
     "iosReactotronHint": "If this doesn't work, ensure the Reactotron desktop app is running and reload app."
   },
   "mapScreen": {
-    "title": "Aviation Map"
+    "title": "Aviation Map",
+    "follow": "Follow"
   },
   "storybook": {
     "placeholder": "Placeholder",
