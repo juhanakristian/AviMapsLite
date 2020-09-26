@@ -1,16 +1,15 @@
 import React from "react"
 import Geolocation from "@react-native-community/geolocation"
+import { DocumentDirectoryPath } from "react-native-fs"
 
 import { observer } from "mobx-react-lite"
-import { TextStyle, View, ViewStyle, Image, Animated } from "react-native"
+import { TextStyle, View, ViewStyle } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import MapView, { Camera, Coordinate, LatLng, LocalTile, Marker } from "react-native-maps"
+import MapView, { Camera, LatLng, LocalTile, Marker } from "react-native-maps"
 import { color, spacing } from "../../theme"
-import { Screen, Header, Wallpaper, Button, Text } from "../../components"
+import { Screen, Header, Wallpaper, Button } from "../../components"
 
 import Airplane from "./airplane"
-
-const AirplaneImage = require("./airplane.png")
 
 const HINT: TextStyle = {
   color: "#BAB6C8",
@@ -74,10 +73,9 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
   const [follow, setFollow] = React.useState(false)
 
   function updateCameraHeading() {
-    console.log("updateCameraHeading")
     const map = mapRef.current
     // @ts-ignore: Object is possibly 'null'.
-    map.getCamera().then((info) => {
+    map.getCamera().then((info: Camera) => {
       setCameraHeading(info.heading)
     })
   }
@@ -89,7 +87,6 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
         longitude: position.coords.longitude,
       })
 
-      console.log(`Heading ${position.coords.heading}`)
       setCurrentHeading(position.coords.heading)
       updateCameraHeading()
     })
@@ -108,7 +105,6 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
   }
 
   function handlePressFollow() {
-    console.log("FOLLOW")
     setFollow(!follow)
   }
 
@@ -157,15 +153,14 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
             })
           }}
         >
-          <Marker coordinate={currentPosition} flat anchor={{ x: 0.5, y: 0.5 }} tracksViewChanges>
-            {/* <View> */}
+          <LocalTile
+            pathTemplate={`${DocumentDirectoryPath}/openflightmaps/{z}/{x}/{y}.png`}
+            tileSize={256}
+          />
+          <Marker coordinate={currentPosition} flat anchor={{ x: 0.5, y: 0.5 }}>
             <View style={{ transform: [{ rotate: `${currentHeading - cameraHeading}deg` }] }}>
               <Airplane fill="black" />
             </View>
-            {/* <Animated.Image
-              source={AirplaneImage}
-              style={{ width: 50, height: 50, transform: [{ rotate: `${currentHeading}deg` }] }}
-            ></Animated.Image> */}
           </Marker>
         </MapView>
       </Screen>
