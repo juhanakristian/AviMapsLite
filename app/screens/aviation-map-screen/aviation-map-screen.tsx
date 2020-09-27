@@ -146,11 +146,7 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
             updateCameraHeading()
           }}
           onTouchMove={() => {
-            const map = mapRef.current
-            // @ts-ignore: Object is possibly 'null'.
-            map.getCamera().then((info) => {
-              setCameraHeading(info.heading)
-            })
+            updateCameraHeading()
           }}
         >
           <LocalTile
