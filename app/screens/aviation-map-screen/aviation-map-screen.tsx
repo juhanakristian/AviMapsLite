@@ -10,6 +10,7 @@ import { color, spacing } from "../../theme"
 import { Screen, Header, Wallpaper, Button } from "../../components"
 
 import Airplane from "./airplane"
+import { FlightDisplay } from "./flight-display"
 
 const HINT: TextStyle = {
   color: "#BAB6C8",
@@ -17,6 +18,7 @@ const HINT: TextStyle = {
   lineHeight: 15,
   marginVertical: spacing[2],
 }
+
 const BOLD: TextStyle = { fontWeight: "bold" }
 const FOLLOW: ViewStyle = {
   paddingVertical: spacing[4],
@@ -28,6 +30,13 @@ const FOLLOW_TEXT: TextStyle = {
   ...BOLD,
   fontSize: 13,
   letterSpacing: 2,
+}
+
+const FLIGHT_DISPLAY: ViewStyle = {
+  position: "absolute",
+  height: 100,
+  width: "100%",
+  bottom: 0,
 }
 
 const ROOT: ViewStyle = {
@@ -159,6 +168,7 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
             </View>
           </Marker>
         </MapView>
+        <FlightDisplay style={FLIGHT_DISPLAY} />
       </Screen>
     </View>
   )

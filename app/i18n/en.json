@@ -6,7 +6,10 @@
   },
   "mapScreen": {
     "title": "Aviation Map",
-    "follow": "Follow"
+    "follow": "follow",
+    "altitude": "Altitude",
+    "eta": "ETA",
+    "heading": "Heading"
   },
   "storybook": {
     "placeholder": "Placeholder",
