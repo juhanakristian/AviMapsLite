@@ -1,5 +1,5 @@
 import React from "react"
-import Geolocation from "@react-native-community/geolocation"
+import Geolocation, { GeolocationResponse } from "@react-native-community/geolocation"
 import { DocumentDirectoryPath } from "react-native-fs"
 
 import { observer } from "mobx-react-lite"
@@ -67,17 +67,27 @@ const HEADER_TITLE: TextStyle = {
   letterSpacing: 1.5,
 }
 
+interface Geolocation {
+  latitude: number
+  longitude: number
+  altitude: number
+  heading: number
+  speed: number
+}
+
 export const AviationMapScreen = observer(function AviationMapScreen() {
   const navigation = useNavigation()
   const goBack = () => navigation.goBack()
 
-  const [currentPosition, setCurrentPosition] = React.useState<LatLng>({
-    latitude: 64.0797048,
-    longitude: 24.5472132,
+  const [geolocation, setGeolocation] = React.useState<Geolocation>({
+    latitude: 0,
+    longitude: 0,
+    altitude: 0,
+    heading: 0,
+    speed: 0,
   })
 
   const mapRef = React.useRef()
-  const [currentHeading, setCurrentHeading] = React.useState<number>(0)
   const [cameraHeading, setCameraHeading] = React.useState<number>(0)
   const [follow, setFollow] = React.useState(false)
 
@@ -91,26 +101,26 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
 
   React.useEffect(() => {
     const watchId = Geolocation.watchPosition((position) => {
-      setCurrentPosition({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      })
-
-      setCurrentHeading(position.coords.heading)
+      setGeolocation(position.coords)
       updateCameraHeading()
     })
 
     return () => Geolocation.clearWatch(watchId)
   }, [])
 
+  const latlng = {
+    latitude: geolocation.latitude,
+    longitude: geolocation.longitude,
+  }
+
   const camera: Camera = {
     center: {
-      ...currentPosition,
+      ...latlng,
     },
     altitude: 10000,
     pitch: 0,
     zoom: 10,
-    heading: currentHeading,
+    heading: geolocation.heading,
   }
 
   function handlePressFollow() {
@@ -137,8 +147,8 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
         <MapView
           style={MAP}
           initialRegion={{
-            latitude: currentPosition.latitude,
-            longitude: currentPosition.longitude,
+            latitude: geolocation.latitude,
+            longitude: geolocation.longitude,
             latitudeDelta: 0.5,
             longitudeDelta: 0.5,
           }}
@@ -162,13 +172,22 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
             pathTemplate={`${DocumentDirectoryPath}/openflightmaps/{z}/{x}/{y}.png`}
             tileSize={256}
           />
-          <Marker coordinate={currentPosition} flat anchor={{ x: 0.5, y: 0.5 }}>
-            <View style={{ transform: [{ rotate: `${currentHeading - cameraHeading}deg` }] }}>
+          <Marker coordinate={latlng} flat anchor={{ x: 0.5, y: 0.5 }}>
+            <View
+              style={{
+                transform: [{ rotate: `${geolocation.heading - cameraHeading}deg` }],
+              }}
+            >
               <Airplane fill="black" />
             </View>
           </Marker>
         </MapView>
-        <FlightDisplay style={FLIGHT_DISPLAY} />
+        <FlightDisplay
+          style={FLIGHT_DISPLAY}
+          heading={geolocation.heading}
+          altitude={geolocation.altitude}
+          eta={123124}
+        />
       </Screen>
     </View>
   )

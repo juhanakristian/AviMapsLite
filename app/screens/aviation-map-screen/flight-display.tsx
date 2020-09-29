@@ -4,8 +4,6 @@ import { observer } from "mobx-react-lite"
 import { Image, ImageSourcePropType, TextStyle, View, ViewStyle } from "react-native"
 import { Text } from "../../components"
 
-import Airplane from "./airplane"
-
 const DISPLAY_ROW: ViewStyle = {
   height: 100,
   width: "100%",
@@ -23,44 +21,65 @@ function DisplayRow(props: DisplayRowProps) {
 
 const DISPLAY_ITEM: ViewStyle = {
   height: "100%",
+  display: "flex",
   justifyContent: "center",
   backgroundColor: "black",
   alignItems: "center",
   flexGrow: 1,
+  flexBasis: "30%",
 }
 
-const DISPLAY_ITEM_TEXT: TextStyle = {
+const DISPLAY_ITEM_DESC_TEXT: TextStyle = {
   color: "white",
   textTransform: "uppercase",
   fontWeight: "600",
-  marginTop: 10,
+}
+
+const DISPLAY_ITEM_VALUE_TEXT: TextStyle = {
+  color: "white",
+  fontWeight: "600",
+  fontSize: 32,
 }
 
 interface DisplaItemProps {
   titleTx: string
-  icon: ImageSourcePropType
+  value: string
 }
 function DisplayItem(props: DisplaItemProps) {
   return (
     <View style={DISPLAY_ITEM}>
-      {/* <Image source={props.icon} /> */}
-      <Airplane fill="white" />
-      <Text style={DISPLAY_ITEM_TEXT} tx={props.titleTx} />
+      <Text style={DISPLAY_ITEM_VALUE_TEXT}>{props.value}</Text>
+      <Text style={DISPLAY_ITEM_DESC_TEXT} tx={props.titleTx} />
     </View>
   )
 }
 
+function secondsToHHMM(seconds: number): string {
+  const hours = Math.floor(seconds / 3600)
+  const secondsLeft = seconds - hours * 3600
+  const minutes = Math.floor(secondsLeft / 60)
+
+  return `${hours}:${minutes}`
+}
+
 interface FlightDisplayProps {
   style: ViewStyle
+  heading: number
+  altitude: number
+  eta: number
 }
 
 export const FlightDisplay = observer((props: FlightDisplayProps) => {
+  const heading = `${props.heading}°`
+  const altitude = `${props.altitude * 3.2808} ft`
+  const eta = secondsToHHMM(props.eta)
+
   return (
     <View style={props.style}>
       <DisplayRow>
-        <DisplayItem titleTx="mapScreen.heading" icon={require("./airplane")} />
-        <DisplayItem titleTx="mapScreen.altitude" icon={require("./airplane")} />
-        <DisplayItem titleTx="mapScreen.eta" icon={require("./airplane")} />
+        <DisplayItem titleTx="mapScreen.heading" value={heading} />
+        <DisplayItem titleTx="mapScreen.altitude" value={altitude} />
+        <DisplayItem titleTx="mapScreen.eta" value={eta} />
       </DisplayRow>
     </View>
   )
