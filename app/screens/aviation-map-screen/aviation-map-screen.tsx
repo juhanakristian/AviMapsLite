@@ -1,23 +1,16 @@
 import React from "react"
-import Geolocation, { GeolocationResponse } from "@react-native-community/geolocation"
+import Geolocation from "@react-native-community/geolocation"
 import { DocumentDirectoryPath } from "react-native-fs"
 
 import { observer } from "mobx-react-lite"
 import { TextStyle, View, ViewStyle } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-import MapView, { Camera, LatLng, LocalTile, Marker } from "react-native-maps"
+import MapView, { Camera, LocalTile, Marker } from "react-native-maps"
 import { color, spacing } from "../../theme"
 import { Screen, Header, Wallpaper, Button } from "../../components"
 
 import Airplane from "./airplane"
 import { FlightDisplay } from "./flight-display"
-
-const HINT: TextStyle = {
-  color: "#BAB6C8",
-  fontSize: 12,
-  lineHeight: 15,
-  marginVertical: spacing[2],
-}
 
 const BOLD: TextStyle = { fontWeight: "bold" }
 const FOLLOW: ViewStyle = {
@@ -77,7 +70,6 @@ interface Geolocation {
 
 export const AviationMapScreen = observer(function AviationMapScreen() {
   const navigation = useNavigation()
-  const goBack = () => navigation.goBack()
 
   const [geolocation, setGeolocation] = React.useState<Geolocation>({
     latitude: 0,
@@ -123,27 +115,10 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
     heading: geolocation.heading,
   }
 
-  function handlePressFollow() {
-    setFollow(!follow)
-  }
-
   return (
     <View style={ROOT}>
       <Wallpaper />
       <Screen style={CONTAINER} preset="scroll" backgroundColor="transparent">
-        <Header
-          headerTx="mapScreen.title"
-          leftIcon="back"
-          onLeftPress={goBack}
-          style={HEADER}
-          titleStyle={HEADER_TITLE}
-        />
-        <Button
-          style={FOLLOW}
-          textStyle={FOLLOW_TEXT}
-          tx="mapScreen.follow"
-          onPress={handlePressFollow}
-        />
         <MapView
           style={MAP}
           initialRegion={{
