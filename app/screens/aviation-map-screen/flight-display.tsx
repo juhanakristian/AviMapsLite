@@ -1,7 +1,7 @@
 import React from "react"
 
 import { observer } from "mobx-react-lite"
-import { Image, ImageSourcePropType, TextStyle, View, ViewStyle } from "react-native"
+import { TextStyle, View, ViewStyle } from "react-native"
 import { Text } from "../../components"
 
 const DISPLAY_ROW: ViewStyle = {

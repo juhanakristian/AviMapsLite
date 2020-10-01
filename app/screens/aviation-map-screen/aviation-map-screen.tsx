@@ -7,10 +7,11 @@ import { TextStyle, View, ViewStyle } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import MapView, { Camera, LocalTile, Marker } from "react-native-maps"
 import { color, spacing } from "../../theme"
-import { Screen, Header, Wallpaper, Button } from "../../components"
+import { Screen, Wallpaper } from "../../components"
 
 import Airplane from "./airplane"
 import { FlightDisplay } from "./flight-display"
+import { AviationMenu } from "./aviation-menu"
 
 const BOLD: TextStyle = { fontWeight: "bold" }
 const FOLLOW: ViewStyle = {
@@ -164,6 +165,7 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
           eta={123124}
         />
       </Screen>
+      <AviationMenu />
     </View>
   )
 })
