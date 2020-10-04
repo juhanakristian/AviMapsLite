@@ -84,6 +84,8 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
   const [cameraHeading, setCameraHeading] = React.useState<number>(0)
   const [follow, setFollow] = React.useState(false)
 
+  const [menuOpen, setMenuOpen] = React.useState(false)
+
   function updateCameraHeading() {
     const map = mapRef.current
     // @ts-ignore: Object is possibly 'null'.
@@ -165,7 +167,7 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
           eta={123124}
         />
       </Screen>
-      <AviationMenu />
+      <AviationMenu onLocationPress={() => setFollow(true)} />
     </View>
   )
 })
