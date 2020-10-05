@@ -3,34 +3,32 @@ import Geolocation from "@react-native-community/geolocation"
 import { DocumentDirectoryPath } from "react-native-fs"
 
 import { observer } from "mobx-react-lite"
-import { TextStyle, View, ViewStyle } from "react-native"
-import { useNavigation } from "@react-navigation/native"
+import { View, ViewStyle } from "react-native"
 import MapView, { Camera, LocalTile, Marker } from "react-native-maps"
-import { color, spacing } from "../../theme"
+import { color } from "../../theme"
 import { Screen, Wallpaper } from "../../components"
 
 import Airplane from "./airplane"
 import { FlightDisplay } from "./flight-display"
 import { AviationMenu } from "./aviation-menu"
 
-const BOLD: TextStyle = { fontWeight: "bold" }
-const FOLLOW: ViewStyle = {
-  paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
-  backgroundColor: "#5D2555",
-}
-
-const FOLLOW_TEXT: TextStyle = {
-  ...BOLD,
-  fontSize: 13,
-  letterSpacing: 2,
-}
-
 const FLIGHT_DISPLAY: ViewStyle = {
   position: "absolute",
   height: 100,
   width: "100%",
   bottom: 0,
+}
+
+const ROUTE_PLANNING_INDICATOR: ViewStyle = {
+  position: "absolute",
+  bottom: 0,
+  top: 40,
+  left: 0,
+  right: 0,
+  marginBottom: 100,
+  backgroundColor: "transparent",
+  borderColor: "lightgreen",
+  borderWidth: 10,
 }
 
 const ROOT: ViewStyle = {
@@ -48,17 +46,10 @@ const MAP: ViewStyle = {
   height: "100%",
 }
 
-const HEADER: TextStyle = {
-  paddingTop: spacing[3],
-  paddingBottom: spacing[5] - 1,
-  paddingHorizontal: 0,
-}
-const HEADER_TITLE: TextStyle = {
-  ...BOLD,
-  fontSize: 12,
-  lineHeight: 15,
-  textAlign: "center",
-  letterSpacing: 1.5,
+enum MapMode {
+  GPS_LOCK,
+  FREE_MOVEMENT,
+  ROUTE_PLANNING,
 }
 
 interface Geolocation {
@@ -70,8 +61,6 @@ interface Geolocation {
 }
 
 export const AviationMapScreen = observer(function AviationMapScreen() {
-  const navigation = useNavigation()
-
   const [geolocation, setGeolocation] = React.useState<Geolocation>({
     latitude: 0,
     longitude: 0,
@@ -82,9 +71,9 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
 
   const mapRef = React.useRef()
   const [cameraHeading, setCameraHeading] = React.useState<number>(0)
-  const [follow, setFollow] = React.useState(false)
 
   const [menuOpen, setMenuOpen] = React.useState(false)
+  const [mode, setMode] = React.useState(MapMode.FREE_MOVEMENT)
 
   function updateCameraHeading() {
     const map = mapRef.current
@@ -131,7 +120,7 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
             longitudeDelta: 0.5,
           }}
           ref={mapRef}
-          camera={follow ? camera : null}
+          camera={mode === MapMode.GPS_LOCK ? camera : null}
           onTouchEnd={() => {
             updateCameraHeading()
           }}
@@ -139,7 +128,8 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
             updateCameraHeading()
           }}
           onTouchStart={() => {
-            setFollow(false)
+            if (mode === MapMode.GPS_LOCK) setMode(MapMode.FREE_MOVEMENT)
+
             updateCameraHeading()
           }}
           onTouchMove={() => {
@@ -167,7 +157,23 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
           eta={123124}
         />
       </Screen>
-      <AviationMenu onLocationPress={() => setFollow(true)} />
+      <AviationMenu
+        open={menuOpen}
+        onCloseMenu={() => setMenuOpen(false)}
+        onOpenMenu={() => setMenuOpen(true)}
+        onLocationPress={() => setMode(MapMode.GPS_LOCK)}
+        onRoutePlanningPress={() => {
+          if (mode === MapMode.ROUTE_PLANNING) {
+            setMode(MapMode.FREE_MOVEMENT)
+            setMenuOpen(false)
+          } else {
+            setMode(MapMode.ROUTE_PLANNING)
+          }
+        }}
+      />
+      {mode === MapMode.ROUTE_PLANNING && (
+        <View pointerEvents="none" style={ROUTE_PLANNING_INDICATOR}></View>
+      )}
     </View>
   )
 })

@@ -52,33 +52,39 @@ function AviationMenuButton(props: AviationMenuButtonProps) {
 
 interface AviationMenuProps {
   onLocationPress: () => void
+  onRoutePlanningPress: () => void
+  onOpenMenu: () => void
+  onCloseMenu: () => void
+  open: boolean
 }
 
 export const AviationMenu = observer((props: AviationMenuProps) => {
-  const [open, setOpen] = React.useState(false)
   return (
     <View style={MENU}>
-      {open ? (
+      {props.open ? (
         <>
-          <AviationMenuButton icon={<MenuIcon fill="black" />} onPress={() => setOpen(false)} />
+          <AviationMenuButton
+            icon={<MenuIcon fill="black" />}
+            onPress={() => props.onCloseMenu()}
+          />
           <AviationMenuButton
             icon={<SettingsIcon fill="black" />}
             onPress={() => console.log("PRESS")}
           />
           <AviationMenuButton
             icon={<RouteIcon fill="black" />}
-            onPress={() => console.log("PRESS")}
+            onPress={() => props.onRoutePlanningPress()}
           />
           <AviationMenuButton
             icon={<LocationIcon fill="black" />}
             onPress={() => {
-              setOpen(false)
+              props.onCloseMenu()
               props.onLocationPress()
             }}
           />
         </>
       ) : (
-        <AviationMenuButton icon={<MenuIcon fill="black" />} onPress={() => setOpen(true)} />
+        <AviationMenuButton icon={<MenuIcon fill="black" />} onPress={() => props.onOpenMenu()} />
       )}
     </View>
   )
