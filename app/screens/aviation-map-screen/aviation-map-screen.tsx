@@ -52,6 +52,48 @@ enum MapMode {
   ROUTE_PLANNING,
 }
 
+interface MapState {
+  mode: MapMode
+  menuOpen: boolean
+}
+
+const initialState: MapState = {
+  mode: MapMode.FREE_MOVEMENT,
+  menuOpen: false,
+}
+
+interface MapAction {
+  type: "touch_map" | "gps_lock" | "route_planner"
+}
+
+function mapReducer(state: MapState, action: MapAction) {
+  switch (action.type) {
+    case "touch_map": {
+      if (state.mode === MapMode.GPS_LOCK) return { ...state, mode: MapMode.FREE_MOVEMENT }
+      return state
+    }
+    case "gps_lock": {
+      return {
+        ...state,
+        mode: MapMode.GPS_LOCK,
+      }
+    }
+    case "route_planner": {
+      if (state.mode === MapMode.ROUTE_PLANNING) {
+        return {
+          ...state,
+          mode: MapMode.FREE_MOVEMENT,
+          menuOpen: false,
+        }
+      }
+      return {
+        ...state,
+        mode: MapMode.ROUTE_PLANNING,
+      }
+    }
+  }
+}
+
 interface Geolocation {
   latitude: number
   longitude: number
@@ -73,7 +115,7 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
   const [cameraHeading, setCameraHeading] = React.useState<number>(0)
 
   const [menuOpen, setMenuOpen] = React.useState(false)
-  const [mode, setMode] = React.useState(MapMode.FREE_MOVEMENT)
+  const [state, dispatch] = React.useReducer(mapReducer, initialState)
 
   function updateCameraHeading() {
     const map = mapRef.current
@@ -120,7 +162,7 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
             longitudeDelta: 0.5,
           }}
           ref={mapRef}
-          camera={mode === MapMode.GPS_LOCK ? camera : null}
+          camera={state.mode === MapMode.GPS_LOCK ? camera : null}
           onTouchEnd={() => {
             updateCameraHeading()
           }}
@@ -128,8 +170,7 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
             updateCameraHeading()
           }}
           onTouchStart={() => {
-            if (mode === MapMode.GPS_LOCK) setMode(MapMode.FREE_MOVEMENT)
-
+            dispatch({ type: "touch_map" })
             updateCameraHeading()
           }}
           onTouchMove={() => {
@@ -161,17 +202,12 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
         open={menuOpen}
         onCloseMenu={() => setMenuOpen(false)}
         onOpenMenu={() => setMenuOpen(true)}
-        onLocationPress={() => setMode(MapMode.GPS_LOCK)}
+        onLocationPress={() => dispatch({ type: "gps_lock" })}
         onRoutePlanningPress={() => {
-          if (mode === MapMode.ROUTE_PLANNING) {
-            setMode(MapMode.FREE_MOVEMENT)
-            setMenuOpen(false)
-          } else {
-            setMode(MapMode.ROUTE_PLANNING)
-          }
+          dispatch({ type: "route_planner" })
         }}
       />
-      {mode === MapMode.ROUTE_PLANNING && (
+      {state.mode === MapMode.ROUTE_PLANNING && (
         <View pointerEvents="none" style={ROUTE_PLANNING_INDICATOR}></View>
       )}
     </View>
