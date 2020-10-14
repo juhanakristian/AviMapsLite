@@ -7,7 +7,7 @@
 import React from "react"
 
 import { createNativeStackNavigator } from "react-native-screens/native-stack"
-import { WelcomeScreen, DemoScreen, AviationMapScreen } from "../screens"
+import { AviationMapScreen } from "../screens"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator

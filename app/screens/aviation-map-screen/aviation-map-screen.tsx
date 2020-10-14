@@ -2,7 +2,6 @@ import React from "react"
 import Geolocation from "@react-native-community/geolocation"
 import { DocumentDirectoryPath } from "react-native-fs"
 
-import { observer } from "mobx-react-lite"
 import { View, ViewStyle } from "react-native"
 import MapView, { Camera, LocalTile, Marker } from "react-native-maps"
 import { color } from "../../theme"
@@ -102,7 +101,7 @@ interface Geolocation {
   speed: number
 }
 
-export const AviationMapScreen = observer(function AviationMapScreen() {
+export function AviationMapScreen() {
   const [geolocation, setGeolocation] = React.useState<Geolocation>({
     latitude: 0,
     longitude: 0,
@@ -212,4 +211,4 @@ export const AviationMapScreen = observer(function AviationMapScreen() {
       )}
     </View>
   )
-})
+}

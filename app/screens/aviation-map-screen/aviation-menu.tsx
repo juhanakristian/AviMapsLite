@@ -1,6 +1,5 @@
 import React from "react"
 
-import { observer } from "mobx-react-lite"
 import { View, ViewStyle, TouchableOpacity } from "react-native"
 
 import MenuIcon from "./icons/menu"
@@ -58,7 +57,7 @@ interface AviationMenuProps {
   open: boolean
 }
 
-export const AviationMenu = observer((props: AviationMenuProps) => {
+export function AviationMenu(props: AviationMenuProps) {
   return (
     <View style={MENU}>
       {props.open ? (
@@ -88,4 +87,4 @@ export const AviationMenu = observer((props: AviationMenuProps) => {
       )}
     </View>
   )
-})
+}

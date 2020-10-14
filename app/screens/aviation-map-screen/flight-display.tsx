@@ -1,6 +1,5 @@
 import React from "react"
 
-import { observer } from "mobx-react-lite"
 import { TextStyle, View, ViewStyle } from "react-native"
 import { Text } from "../../components"
 
@@ -69,7 +68,7 @@ interface FlightDisplayProps {
   eta: number
 }
 
-export const FlightDisplay = observer((props: FlightDisplayProps) => {
+export function FlightDisplay(props: FlightDisplayProps) {
   const heading = `${props.heading}°`
   const altitude = `${props.altitude * 3.2808} ft`
   const eta = secondsToHHMM(props.eta)
@@ -83,4 +82,4 @@ export const FlightDisplay = observer((props: FlightDisplayProps) => {
       </DisplayRow>
     </View>
   )
-})
+}
