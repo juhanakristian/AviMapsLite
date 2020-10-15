@@ -51,14 +51,28 @@ enum MapMode {
   ROUTE_PLANNING,
 }
 
+enum RoutePlanningMode {
+  NONE,
+  ADD_POINT,
+  DELETE_POINT,
+}
+
+interface RoutePoint {
+  latitude: number
+  longitude: number
+}
 interface MapState {
   mode: MapMode
   menuOpen: boolean
+  route: RoutePoint[]
+  routePlanningMode: RoutePlanningMode
 }
 
 const initialState: MapState = {
   mode: MapMode.FREE_MOVEMENT,
   menuOpen: false,
+  route: [],
+  routePlanningMode: RoutePlanningMode.NONE,
 }
 
 interface MapAction {
