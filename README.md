@@ -12,6 +12,7 @@ A React Native app displaying [Open Flight Map for Finland](https://www.openflig
 #### TODO
 
 - Route planning
+- Download maps
 
 ### Screenshots
 
