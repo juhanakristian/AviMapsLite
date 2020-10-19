@@ -1,7 +1,8 @@
 import React from "react"
 
-import { TextStyle, View, ViewStyle } from "react-native"
+import { TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import { Text } from "../../components"
+import { AviationMenu } from "./aviation-menu"
 
 const DISPLAY_ROW: ViewStyle = {
   height: 100,
@@ -61,6 +62,21 @@ function secondsToHHMM(seconds: number): string {
   return `${hours}:${minutes}`
 }
 
+const MENUTOGGLE_TEXT: TextStyle = {
+  color: "black",
+  fontWeight: "600",
+  fontSize: 18,
+  textTransform: "uppercase",
+}
+
+function MenuToggle({ onToggle, toggled }) {
+  return (
+    <TouchableOpacity onPress={onToggle}>
+      <Text style={MENUTOGGLE_TEXT}>{toggled ? "Close" : "Open"}</Text>
+    </TouchableOpacity>
+  )
+}
+
 interface FlightDisplayProps {
   style: ViewStyle
   heading: number
@@ -73,13 +89,26 @@ export function FlightDisplay(props: FlightDisplayProps) {
   const altitude = `${props.altitude * 3.2808} ft`
   const eta = secondsToHHMM(props.eta)
 
+  const [menuOpen, setMenuOpen] = React.useState(false)
+
   return (
     <View style={props.style}>
+      <MenuToggle onToggle={() => setMenuOpen(!menuOpen)} toggled={menuOpen} />
       <DisplayRow>
         <DisplayItem titleTx="mapScreen.heading" value={heading} />
         <DisplayItem titleTx="mapScreen.altitude" value={altitude} />
         <DisplayItem titleTx="mapScreen.eta" value={eta} />
       </DisplayRow>
+      {menuOpen && (
+        <DisplayRow>
+          <AviationMenu
+            onCloseMenu={() => {}}
+            onOpenMenu={() => {}}
+            onLocationPress={() => {}}
+            onRoutePlanningPress={() => {}}
+          />
+        </DisplayRow>
+      )}
     </View>
   )
 }

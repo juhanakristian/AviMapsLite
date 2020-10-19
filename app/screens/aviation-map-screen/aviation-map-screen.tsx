@@ -13,7 +13,6 @@ import { AviationMenu } from "./aviation-menu"
 
 const FLIGHT_DISPLAY: ViewStyle = {
   position: "absolute",
-  height: 100,
   width: "100%",
   bottom: 0,
 }
@@ -165,7 +164,7 @@ export function AviationMapScreen() {
   return (
     <View style={ROOT}>
       <Wallpaper />
-      <Screen style={CONTAINER} preset="scroll" backgroundColor="transparent">
+      <Screen style={CONTAINER} preset="fixed" backgroundColor="transparent">
         <MapView
           style={MAP}
           initialRegion={{
@@ -211,8 +210,7 @@ export function AviationMapScreen() {
           eta={123124}
         />
       </Screen>
-      <AviationMenu
-        open={menuOpen}
+      {/* <AviationMenu
         onCloseMenu={() => setMenuOpen(false)}
         onOpenMenu={() => setMenuOpen(true)}
         onLocationPress={() => dispatch({ type: "gps_lock" })}
@@ -222,7 +220,7 @@ export function AviationMapScreen() {
       />
       {state.mode === MapMode.ROUTE_PLANNING && (
         <View pointerEvents="none" style={ROUTE_PLANNING_INDICATOR}></View>
-      )}
+      )} */}
     </View>
   )
 }
