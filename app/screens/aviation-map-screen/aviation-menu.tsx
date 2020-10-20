@@ -1,6 +1,6 @@
 import React from "react"
 
-import { View, ViewStyle, TouchableOpacity, Pressable } from "react-native"
+import { ViewStyle, Pressable } from "react-native"
 
 import SettingsIcon from "./icons/settings"
 import RouteIcon from "./icons/route"
@@ -30,30 +30,17 @@ function AviationMenuButton(props: AviationMenuButtonProps) {
 }
 
 interface AviationMenuProps {
+  onSettingsPress: () => void
   onLocationPress: () => void
   onRoutePlanningPress: () => void
-  onOpenMenu: () => void
-  onCloseMenu: () => void
 }
 
 export function AviationMenu(props: AviationMenuProps) {
   return (
     <>
-      <AviationMenuButton
-        icon={<SettingsIcon fill="white" />}
-        onPress={() => console.log("PRESS")}
-      />
-      <AviationMenuButton
-        icon={<RouteIcon fill="white" />}
-        onPress={() => props.onRoutePlanningPress()}
-      />
-      <AviationMenuButton
-        icon={<LocationIcon fill="white" />}
-        onPress={() => {
-          props.onCloseMenu()
-          props.onLocationPress()
-        }}
-      />
+      <AviationMenuButton icon={<SettingsIcon fill="white" />} onPress={props.onSettingsPress} />
+      <AviationMenuButton icon={<RouteIcon fill="white" />} onPress={props.onRoutePlanningPress} />
+      <AviationMenuButton icon={<LocationIcon fill="white" />} onPress={props.onLocationPress} />
     </>
   )
 }

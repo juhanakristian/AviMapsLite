@@ -15,6 +15,7 @@ const FLIGHT_DISPLAY: ViewStyle = {
   position: "absolute",
   width: "100%",
   bottom: 0,
+  backgroundColor: "black",
 }
 
 const ROUTE_PLANNING_INDICATOR: ViewStyle = {
@@ -208,19 +209,19 @@ export function AviationMapScreen() {
           heading={geolocation.heading}
           altitude={geolocation.altitude}
           eta={123124}
+          menu={
+            <AviationMenu
+              onSettingsPress={() => {
+                console.log("SETTINGS")
+              }}
+              onLocationPress={() => dispatch({ type: "gps_lock" })}
+              onRoutePlanningPress={() => {
+                dispatch({ type: "route_planner" })
+              }}
+            />
+          }
         />
       </Screen>
-      {/* <AviationMenu
-        onCloseMenu={() => setMenuOpen(false)}
-        onOpenMenu={() => setMenuOpen(true)}
-        onLocationPress={() => dispatch({ type: "gps_lock" })}
-        onRoutePlanningPress={() => {
-          dispatch({ type: "route_planner" })
-        }}
-      />
-      {state.mode === MapMode.ROUTE_PLANNING && (
-        <View pointerEvents="none" style={ROUTE_PLANNING_INDICATOR}></View>
-      )} */}
     </View>
   )
 }

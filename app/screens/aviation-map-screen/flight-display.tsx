@@ -11,6 +11,18 @@ const DISPLAY_ROW: ViewStyle = {
   flexDirection: "row",
 }
 
+const DIVIDER_CONTAINER: ViewStyle = {
+  width: "100%",
+  display: "flex",
+  alignItems: "center",
+}
+
+const DIVIDER: ViewStyle = {
+  height: 2,
+  width: "90%",
+  backgroundColor: "#282828",
+}
+
 interface DisplayRowProps {
   children?: React.ReactNode | React.ReactNode[]
 }
@@ -23,7 +35,6 @@ const DISPLAY_ITEM: ViewStyle = {
   height: "100%",
   display: "flex",
   justifyContent: "center",
-  backgroundColor: "black",
   alignItems: "center",
   flexGrow: 1,
   flexBasis: "30%",
@@ -62,6 +73,10 @@ function secondsToHHMM(seconds: number): string {
   return `${hours}:${minutes}`
 }
 
+const MENUTOGGLE: ViewStyle = {
+  marginTop: -20,
+}
+
 const MENUTOGGLE_TEXT: TextStyle = {
   color: "black",
   fontWeight: "600",
@@ -71,9 +86,17 @@ const MENUTOGGLE_TEXT: TextStyle = {
 
 function MenuToggle({ onToggle, toggled }) {
   return (
-    <TouchableOpacity onPress={onToggle}>
+    <TouchableOpacity style={MENUTOGGLE} onPress={onToggle}>
       <Text style={MENUTOGGLE_TEXT}>{toggled ? "Close" : "Open"}</Text>
     </TouchableOpacity>
+  )
+}
+
+function Divider() {
+  return (
+    <View style={DIVIDER_CONTAINER}>
+      <View style={DIVIDER} />
+    </View>
   )
 }
 
@@ -82,6 +105,7 @@ interface FlightDisplayProps {
   heading: number
   altitude: number
   eta: number
+  menu: React.ReactNode
 }
 
 export function FlightDisplay(props: FlightDisplayProps) {
@@ -99,16 +123,8 @@ export function FlightDisplay(props: FlightDisplayProps) {
         <DisplayItem titleTx="mapScreen.altitude" value={altitude} />
         <DisplayItem titleTx="mapScreen.eta" value={eta} />
       </DisplayRow>
-      {menuOpen && (
-        <DisplayRow>
-          <AviationMenu
-            onCloseMenu={() => {}}
-            onOpenMenu={() => {}}
-            onLocationPress={() => {}}
-            onRoutePlanningPress={() => {}}
-          />
-        </DisplayRow>
-      )}
+      <Divider />
+      {menuOpen && <DisplayRow>{props.menu}</DisplayRow>}
     </View>
   )
 }
