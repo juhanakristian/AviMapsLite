@@ -127,7 +127,6 @@ export function AviationMapScreen() {
   const mapRef = React.useRef()
   const [cameraHeading, setCameraHeading] = React.useState<number>(0)
 
-  const [menuOpen, setMenuOpen] = React.useState(false)
   const [state, dispatch] = React.useReducer(mapReducer, initialState)
 
   function updateCameraHeading() {
