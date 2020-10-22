@@ -76,7 +76,8 @@ const initialState: MapState = {
 }
 
 interface MapAction {
-  type: "touch_map" | "gps_lock" | "route_planner"
+  type: "touch_map" | "gps_lock" | "route_planner" | "add_route_point" | "delete_route_point"
+  value?: unknown
 }
 
 function mapReducer(state: MapState, action: MapAction) {
@@ -175,6 +176,11 @@ export function AviationMapScreen() {
           }}
           ref={mapRef}
           camera={state.mode === MapMode.GPS_LOCK ? camera : null}
+          onLongPress={(e) => {
+            if (state.routePlanningMode === RoutePlanningMode.ADD_POINT) {
+              dispatch({ type: "add_route_point", value: { lat: 0, lng: 0 } })
+            }
+          }}
           onTouchEnd={() => {
             updateCameraHeading()
           }}
