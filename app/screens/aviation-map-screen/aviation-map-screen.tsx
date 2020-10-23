@@ -3,7 +3,7 @@ import Geolocation from "@react-native-community/geolocation"
 import { DocumentDirectoryPath } from "react-native-fs"
 
 import { View, ViewStyle } from "react-native"
-import MapView, { Camera, LocalTile, Marker } from "react-native-maps"
+import MapView, { Camera, LatLng, LocalTile, Marker } from "react-native-maps"
 import { color } from "../../theme"
 import { Screen, Wallpaper } from "../../components"
 
@@ -57,10 +57,7 @@ enum RoutePlanningMode {
   DELETE_POINT,
 }
 
-interface RoutePoint {
-  latitude: number
-  longitude: number
-}
+type RoutePoint = LatLng
 interface MapState {
   mode: MapMode
   menuOpen: boolean
@@ -75,10 +72,34 @@ const initialState: MapState = {
   routePlanningMode: RoutePlanningMode.NONE,
 }
 
-interface MapAction {
-  type: "touch_map" | "gps_lock" | "route_planner" | "add_route_point" | "delete_route_point"
-  value?: unknown
+interface AddPointAction {
+  type: "add_route_point"
+  point: RoutePoint
 }
+
+interface DeletePointAction {
+  type: "delete_route_point"
+  point: number
+}
+
+interface TouchMapAction {
+  type: "touch_map"
+}
+
+interface GpsLockAction {
+  type: "gps_lock"
+}
+
+interface RoutePlannerAction {
+  type: "route_planner"
+}
+
+type MapAction =
+  | AddPointAction
+  | DeletePointAction
+  | TouchMapAction
+  | GpsLockAction
+  | RoutePlannerAction
 
 function mapReducer(state: MapState, action: MapAction) {
   switch (action.type) {
@@ -103,6 +124,19 @@ function mapReducer(state: MapState, action: MapAction) {
       return {
         ...state,
         mode: MapMode.ROUTE_PLANNING,
+      }
+    }
+    case "add_route_point": {
+      return {
+        ...state,
+        route: [...state.route, action.point],
+      }
+    }
+    case "delete_route_point": {
+      const route = state.route.slice(action.point, 1)
+      return {
+        ...state,
+        route,
       }
     }
   }
@@ -178,7 +212,7 @@ export function AviationMapScreen() {
           camera={state.mode === MapMode.GPS_LOCK ? camera : null}
           onLongPress={(e) => {
             if (state.routePlanningMode === RoutePlanningMode.ADD_POINT) {
-              dispatch({ type: "add_route_point", value: { lat: 0, lng: 0 } })
+              dispatch({ type: "add_route_point", point: e.nativeEvent.coordinate })
             }
           }}
           onTouchEnd={() => {
