@@ -3,7 +3,7 @@ import Geolocation from "@react-native-community/geolocation"
 import { DocumentDirectoryPath } from "react-native-fs"
 
 import { View, ViewStyle } from "react-native"
-import MapView, { Camera, LatLng, LocalTile, Marker } from "react-native-maps"
+import MapView, { Camera, LatLng, LocalTile, Marker, Polyline } from "react-native-maps"
 import { color } from "../../theme"
 import { Screen, Wallpaper } from "../../components"
 
@@ -242,6 +242,19 @@ export function AviationMapScreen() {
               <Airplane fill="black" />
             </View>
           </Marker>
+          <Polyline
+            coordinates={state.route}
+            strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
+            strokeColors={[
+              "#7F0000",
+              "#00000000", // no color, creates a "long" gradient between the previous and next coordinate
+              "#B24112",
+              "#E5845C",
+              "#238C23",
+              "#7F0000",
+            ]}
+            strokeWidth={6}
+          />
         </MapView>
         <FlightDisplay
           style={FLIGHT_DISPLAY}
