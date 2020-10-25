@@ -196,6 +196,10 @@ export function AviationMapScreen() {
     heading: geolocation.heading,
   }
 
+  const routeMarkers = state.route.map((point) => (
+    <Marker key={`${point.latitude}-${point.longitude}`} coordinate={point} />
+  ))
+
   return (
     <View style={ROOT}>
       <Wallpaper />
@@ -211,9 +215,10 @@ export function AviationMapScreen() {
           ref={mapRef}
           camera={state.mode === MapMode.GPS_LOCK ? camera : null}
           onLongPress={(e) => {
-            if (state.routePlanningMode === RoutePlanningMode.ADD_POINT) {
-              dispatch({ type: "add_route_point", point: e.nativeEvent.coordinate })
-            }
+            // if (state.routePlanningMode === RoutePlanningMode.ADD_POINT) {
+            dispatch({ type: "add_route_point", point: e.nativeEvent.coordinate })
+            console.log("ADD POINT")
+            // }
           }}
           onTouchEnd={() => {
             updateCameraHeading()
@@ -255,6 +260,7 @@ export function AviationMapScreen() {
             ]}
             strokeWidth={6}
           />
+          {routeMarkers}
         </MapView>
         <FlightDisplay
           style={FLIGHT_DISPLAY}
