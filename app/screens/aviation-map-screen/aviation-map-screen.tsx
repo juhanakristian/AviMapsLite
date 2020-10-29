@@ -9,13 +9,32 @@ import { Screen, Wallpaper } from "../../components"
 
 import Airplane from "./airplane"
 import { FlightDisplay } from "./flight-display"
-import { AviationMenu } from "./aviation-menu"
+import { MenuButton } from "./menu-button"
+
+import SettingsIcon from "./icons/settings"
+import RouteIcon from "./icons/route"
+import LocationIcon from "./icons/location"
+import TrashIcon from "./icons/trash"
 
 const FLIGHT_DISPLAY: ViewStyle = {
   position: "absolute",
   width: "100%",
   bottom: 0,
   backgroundColor: "black",
+}
+
+const ROUTE_MENU: ViewStyle = {
+  position: "absolute",
+  width: "100%",
+  bottom: 0,
+  backgroundColor: "black",
+}
+
+const BUTTON_ROW: ViewStyle = {
+  height: 100,
+  width: "100%",
+  display: "flex",
+  flexDirection: "row",
 }
 
 const ROUTE_PLANNING_INDICATOR: ViewStyle = {
@@ -262,23 +281,47 @@ export function AviationMapScreen() {
           />
           {routeMarkers}
         </MapView>
-        <FlightDisplay
-          style={FLIGHT_DISPLAY}
-          heading={geolocation.heading}
-          altitude={geolocation.altitude}
-          eta={123124}
-          menu={
-            <AviationMenu
-              onSettingsPress={() => {
-                console.log("SETTINGS")
-              }}
-              onLocationPress={() => dispatch({ type: "gps_lock" })}
-              onRoutePlanningPress={() => {
-                dispatch({ type: "route_planner" })
-              }}
-            />
-          }
-        />
+        {state.mode !== MapMode.ROUTE_PLANNING ? (
+          <FlightDisplay
+            style={FLIGHT_DISPLAY}
+            heading={geolocation.heading}
+            altitude={geolocation.altitude}
+            eta={123124}
+            menu={
+              <>
+                <MenuButton
+                  icon={<SettingsIcon fill="white" />}
+                  onPress={() => console.log("SETTINGS")}
+                />
+                <MenuButton
+                  icon={<RouteIcon fill="white" />}
+                  onPress={() => dispatch({ type: "route_planner" })}
+                />
+                <MenuButton
+                  icon={<LocationIcon fill="white" />}
+                  onPress={() => dispatch({ type: "gps_lock" })}
+                />
+              </>
+            }
+          />
+        ) : (
+          <View style={ROUTE_MENU}>
+            <View style={BUTTON_ROW}>
+              <MenuButton
+                icon={<SettingsIcon fill="white" />}
+                onPress={() => dispatch({ type: "gps_lock" })}
+              />
+              <MenuButton
+                icon={<RouteIcon fill="white" />}
+                onPress={() => dispatch({ type: "gps_lock" })}
+              />
+              <MenuButton
+                icon={<TrashIcon fill="white" />}
+                onPress={() => dispatch({ type: "route_planner" })}
+              />
+            </View>
+          </View>
+        )}
       </Screen>
     </View>
   )

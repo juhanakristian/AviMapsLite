@@ -2,7 +2,6 @@ import React from "react"
 
 import { TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import { Text } from "../../components"
-import { AviationMenu } from "./aviation-menu"
 
 const DISPLAY_ROW: ViewStyle = {
   height: 100,
